@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "544445571540",
+    "project_id": "kila-8e385",
+    "storage_bucket": "kila-8e385.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544445571540:android:d8b99ab71f4d2a68fc3641",
+        "android_client_info": {
+          "package_name": "com.example.kila"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544445571540-fnv7drkqfev0bev37r6i6vlomit5r83k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kila",
+            "certificate_hash": "912c3d072da3b40508d69058f87d915ecebeb002"
+          }
+        },
+        {
+          "client_id": "544445571540-3nkhng36hjqv7u4t1bj59qp4odq39tq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9UnSXqW26D0d2eFtLEcPykK6QfzBCbh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544445571540-3nkhng36hjqv7u4t1bj59qp4odq39tq4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
