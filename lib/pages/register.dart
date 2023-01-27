@@ -21,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
         UserManagement().storeNewUser(userCredential.user,userType, context);
+        UserManagement().storeNewUserByType(userCredential.user,userType, context);
         print(userCredential);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

@@ -19,6 +19,19 @@ class UserManagement {
     });
   }
 
+  storeNewUserByType(user,type, context) async {
+    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null)
+      await FirebaseFirestore.instance
+          .collection('users_${type}s')
+          .doc(firebaseUser.uid)
+          .set({'email': user.email, 'uid': user.uid})
+          .then((value) => {})
+          .catchError((e) {
+        print(e);
+      });
+  }
+
   getUserType(context) {
     final firebaseUser = FirebaseAuth.instance.currentUser;
     if (firebaseUser != null)
