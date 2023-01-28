@@ -1,55 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'detail_c_page.dart';
 
-import 'detail_v_page.dart';
-import 'login.dart';
+class OrderList extends StatefulWidget {
 
-class HomeVendeur extends StatefulWidget {
-  const HomeVendeur({Key? key}) : super(key: key);
+  const OrderList({Key? key}) : super(key: key);
 
   @override
-  State<HomeVendeur> createState() => _HomeVendeurState();
+  State<OrderList> createState() => _OrderListState();
+
 }
 
-class _HomeVendeurState extends State<HomeVendeur> {
-
-  final storage = new FlutterSecureStorage();
-
+class _OrderListState extends State<OrderList> {
+  // Récupérer l'utilisateur connecté
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final User user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Vendeur"),
-          actions: [
-            IconButton(onPressed: ()async => {
-              await FirebaseAuth.instance.signOut(),
-              await storage.delete(key: "uid"),
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                      (route) => false)}, icon: Icon(Icons.logout))
-          ],
+          title: Text("Mon Historique"),
         ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('orders').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          stream: _firestore
+              .collection('users_clients')
+              .doc(user.uid)
+              .collection('orders')
+              .snapshots(),
+          builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
+            //final orders = snapshot.data!.docs;
+
             List<Widget> orderWidgets = [];
             if (snapshot.hasData) {
               var orders = snapshot.data!.docs;
-
               for (var order in orders) {
                 final orderData = order.data();
+
                 final orderWidget = ListTile(
                   title: Text(orderData['product'].toString()),
                   subtitle: Text(orderData['quantity'].toString()),
@@ -57,7 +51,7 @@ class _HomeVendeurState extends State<HomeVendeur> {
                     // gérer le clic sur la commande
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => OrderDetailPageV(orderId: order.id),
+                        builder: (context) => OrderDetailPageC(orderId: order.id),
                       ),
                     );
                   },
@@ -65,6 +59,7 @@ class _HomeVendeurState extends State<HomeVendeur> {
                 orderWidgets.add(orderWidget);
               }
             }
+
             return ListView(
               children: orderWidgets,
             );

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'historic_client_page.dart';
 import 'login.dart';
 
 
@@ -15,6 +16,11 @@ class HomeClient extends StatefulWidget {
 
 class _HomeClientState extends State<HomeClient> {
   final storage = new FlutterSecureStorage();
+
+  // Récupérer l'utilisateur connecté
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final User user;
 
   final _formKey = GlobalKey<FormState>();
   late String _product;
@@ -73,9 +79,20 @@ class _HomeClientState extends State<HomeClient> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     _submitOrder();
+                    addOrder();
                   }
                 },
                 child: Text("Soumettre"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => OrderList(),
+                    ),
+                  );
+                },
+                child: Text("Mon historique"),
               ),
             ],
           ),
@@ -94,4 +111,18 @@ class _HomeClientState extends State<HomeClient> {
       "created_at": Timestamp.now(),
     });
   }
+
+  // Ajouter une commande pour l'utilisateur connecté
+  Future<void> addOrder() async {
+    var user = FirebaseAuth.instance.currentUser;
+    await _firestore.collection('users_clients').doc(user.uid).collection('orders').add({
+      "product": _product,
+      "quantity": _quantity,
+      "notes": _notes,
+      "user_id": user.uid,
+      "status": "pending",
+      "created_at": Timestamp.now(),
+    });
+  }
+
 }
